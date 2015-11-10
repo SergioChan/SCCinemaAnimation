@@ -15,9 +15,11 @@
 		F068EDA81BEEFF7700C18B86 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F068EDA61BEEFF7700C18B86 /* LaunchScreen.storyboard */; };
 		F068EDB31BEEFF7800C18B86 /* SCCinemaAnimationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F068EDB21BEEFF7800C18B86 /* SCCinemaAnimationTests.m */; };
 		F068EDBE1BEEFF7800C18B86 /* SCCinemaAnimationUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = F068EDBD1BEEFF7800C18B86 /* SCCinemaAnimationUITests.m */; };
-		F068EDCE1BEF031F00C18B86 /* SCCinemaView.m in Sources */ = {isa = PBXBuildFile; fileRef = F068EDCD1BEF031F00C18B86 /* SCCinemaView.m */; settings = {ASSET_TAGS = (); }; };
-		F068EDD41BEF04DA00C18B86 /* UIViewExt.m in Sources */ = {isa = PBXBuildFile; fileRef = F068EDD31BEF04DA00C18B86 /* UIViewExt.m */; settings = {ASSET_TAGS = (); }; };
-		F068EDD71BEF07C800C18B86 /* SCCinemaButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = F068EDD61BEF07C800C18B86 /* SCCinemaButtonView.m */; settings = {ASSET_TAGS = (); }; };
+		F068EDCE1BEF031F00C18B86 /* SCCinemaView.m in Sources */ = {isa = PBXBuildFile; fileRef = F068EDCD1BEF031F00C18B86 /* SCCinemaView.m */; };
+		F068EDD41BEF04DA00C18B86 /* UIViewExt.m in Sources */ = {isa = PBXBuildFile; fileRef = F068EDD31BEF04DA00C18B86 /* UIViewExt.m */; };
+		F068EDD71BEF07C800C18B86 /* SCCinemaButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = F068EDD61BEF07C800C18B86 /* SCCinemaButtonView.m */; };
+		F0E2BB4D1BF0FAA70052A071 /* SCCinemaSeatView.m in Sources */ = {isa = PBXBuildFile; fileRef = F0E2BB4C1BF0FAA70052A071 /* SCCinemaSeatView.m */; };
+		F0E2BB501BF196240052A071 /* UIImage+ImageWithColor.m in Sources */ = {isa = PBXBuildFile; fileRef = F0E2BB4F1BF196240052A071 /* UIImage+ImageWithColor.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +63,10 @@
 		F068EDD31BEF04DA00C18B86 /* UIViewExt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIViewExt.m; sourceTree = "<group>"; };
 		F068EDD51BEF07C800C18B86 /* SCCinemaButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCCinemaButtonView.h; sourceTree = "<group>"; };
 		F068EDD61BEF07C800C18B86 /* SCCinemaButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCCinemaButtonView.m; sourceTree = "<group>"; };
+		F0E2BB4B1BF0FAA70052A071 /* SCCinemaSeatView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCCinemaSeatView.h; sourceTree = "<group>"; };
+		F0E2BB4C1BF0FAA70052A071 /* SCCinemaSeatView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCCinemaSeatView.m; sourceTree = "<group>"; };
+		F0E2BB4E1BF196240052A071 /* UIImage+ImageWithColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ImageWithColor.h"; sourceTree = "<group>"; };
+		F0E2BB4F1BF196240052A071 /* UIImage+ImageWithColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ImageWithColor.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -168,6 +174,8 @@
 				F068EDCD1BEF031F00C18B86 /* SCCinemaView.m */,
 				F068EDD51BEF07C800C18B86 /* SCCinemaButtonView.h */,
 				F068EDD61BEF07C800C18B86 /* SCCinemaButtonView.m */,
+				F0E2BB4B1BF0FAA70052A071 /* SCCinemaSeatView.h */,
+				F0E2BB4C1BF0FAA70052A071 /* SCCinemaSeatView.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -175,6 +183,8 @@
 		F068EDD11BEF04D100C18B86 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				F0E2BB4E1BF196240052A071 /* UIImage+ImageWithColor.h */,
+				F0E2BB4F1BF196240052A071 /* UIImage+ImageWithColor.m */,
 				F068EDD21BEF04DA00C18B86 /* UIViewExt.h */,
 				F068EDD31BEF04DA00C18B86 /* UIViewExt.m */,
 			);
@@ -316,6 +326,8 @@
 				F068EDD41BEF04DA00C18B86 /* UIViewExt.m in Sources */,
 				F068EDD71BEF07C800C18B86 /* SCCinemaButtonView.m in Sources */,
 				F068ED9A1BEEFF7700C18B86 /* main.m in Sources */,
+				F0E2BB501BF196240052A071 /* UIImage+ImageWithColor.m in Sources */,
+				F0E2BB4D1BF0FAA70052A071 /* SCCinemaSeatView.m in Sources */,
 				F068EDCE1BEF031F00C18B86 /* SCCinemaView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -542,6 +554,7 @@
 				F068EDC41BEEFF7800C18B86 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		F068EDC51BEEFF7800C18B86 /* Build configuration list for PBXNativeTarget "SCCinemaAnimationTests" */ = {
 			isa = XCConfigurationList;
@@ -550,6 +563,7 @@
 				F068EDC71BEEFF7800C18B86 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		F068EDC81BEEFF7800C18B86 /* Build configuration list for PBXNativeTarget "SCCinemaAnimationUITests" */ = {
 			isa = XCConfigurationList;
@@ -558,6 +572,7 @@
 				F068EDCA1BEEFF7800C18B86 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

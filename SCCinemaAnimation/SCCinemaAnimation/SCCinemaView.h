@@ -9,10 +9,15 @@
 #import <UIKit/UIKit.h>
 #import "GlobalHeader.h"
 #import "SCCinemaButtonView.h"
+#import "SCCinemaSeatView.h"
 
 @interface SCCinemaView : UIView
 
 @property (nonatomic, strong) UIView *posterView;
+@property (nonatomic, strong) UIView *posterHeaderView;
+
+@property (nonatomic, strong) SCCinemaSeatView *seatView;
+
 @property (nonatomic, strong) SCCinemaButtonView *button;
 @property (nonatomic, strong) UITextView *descriptionView;
 @property (nonatomic, strong) UIButton *backButton;

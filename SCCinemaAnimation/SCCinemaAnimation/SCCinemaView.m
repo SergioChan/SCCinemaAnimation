@@ -17,6 +17,17 @@
     if(self)
     {
         self.backgroundColor = [UIColor whiteColor];
+        
+        CGFloat seatTop = ((self.height / 10.0f ) * 4.0f) * 0.15f + 80.0f;
+        self.seatView = [[SCCinemaSeatView alloc]initWithFrame:CGRectMake(15.0f, seatTop, self.width - 30.0f, self.height - 100.0f - seatTop)];
+        _seatView.alpha = 0.0f;
+        _seatView.layer.masksToBounds = YES;
+        [self addSubview:_seatView];
+        
+        self.posterHeaderView = [[UIView alloc]initWithFrame:CGRectMake(0.0f, 0.0f, self.width, 0.0f)];
+        _posterHeaderView.backgroundColor = Global_cinemaBlue;
+        [self addSubview:_posterHeaderView];
+        
         self.posterView = [[UIView alloc]initWithFrame:CGRectMake(0.0f, 0.0f, self.width, (self.height / 10.0f ) * 4.0f)];
         _posterView.contentMode = UIViewContentModeScaleAspectFill;
         _posterView.layer.anchorPoint = CGPointMake(0.5, 0);
@@ -31,6 +42,8 @@
         
         //_posterView.image = [UIImage imageNamed:@"background"];
         [self addSubview:_posterView];
+        
+        // 这是海报图上面的蓝色顶部
         
         self.button = [[SCCinemaButtonView alloc]initWithFrame:CGRectMake(30.0f, ((self.height / 10.0f ) * 4.0f) - 20.0f, self.width - 60.0f, 60.0f)];
         _button.titleLabel.text = title;
@@ -55,6 +68,7 @@
         _backButton.titleLabel.font = [UIFont systemFontOfSize:12.0f];
         [_backButton setTitleColor:Global_cinemaBlue forState:UIControlStateNormal];
         _backButton.alpha = 0.0f;
+        [_backButton addTarget:self action:@selector(cinemaAnimated) forControlEvents:UIControlEventTouchUpInside];
         _backButton.hidden = YES;
         [self addSubview:_backButton];
     }
@@ -65,89 +79,155 @@
 {
     CGFloat width = self.width;
     CGFloat height = (self.height / 10.0f ) * 4.0f;
+    
+    [self bringSubviewToFront:self.posterView];
+    [self bringSubviewToFront:self.button];
     if(_backButton.hidden)
     {
         _backButton.hidden = NO;
-        [self bringSubviewToFront:self.button];
-    
-        [UIView animateWithDuration:0.2f delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-            self.posterView.left = 0.1f * width;
-            self.posterView.top = 0.1f * height;
-            self.posterView.width = 0.8f * width;
-            self.posterView.height = 0.8f * height;
+        self.posterHeaderView.left = 0.05f * width;
+        self.posterHeaderView.top = 0.15f * height - 0.5f;
+        self.posterHeaderView.width = 0.9f * width;
+        self.posterHeaderView.height = 5.0f;
+        self.posterHeaderView.alpha = 0.0f;
+        
+        [_posterView.layer addAnimation:[self rotationAnimationDisappear] forKey:@"rotationFisrt"];
+        [_seatView.layer addAnimation:[self scaleAnimationSmaller] forKey:@"scaleFirst"];
+        
+        [UIView animateWithDuration:0.4f delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
+            self.posterView.left = 0.05f * width;
+            self.posterView.top = 0.15f * height;
+            self.posterView.width = 0.9f * width;
+            self.posterView.height = 0.7f * height;
         } completion:^(BOOL finished) {
-            
         }];
         
-        CABasicAnimation* rotationAnimation;
-        rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform"];
-        rotationAnimation.fromValue = [NSValue valueWithCATransform3D:getTransForm3DWithAngle_r(0.0f)];
-        rotationAnimation.toValue = [NSValue valueWithCATransform3D:getTransForm3DWithAngle(-M_PI/2.0f)];
-        rotationAnimation.duration = 0.4f;
-        rotationAnimation.cumulative = YES;
-        rotationAnimation.repeatCount = 1;
-        rotationAnimation.removedOnCompletion=NO;
-        rotationAnimation.fillMode=kCAFillModeForwards;
-        rotationAnimation.autoreverses = NO;
-        [_posterView.layer addAnimation:rotationAnimation forKey:@"rotationFisrt"];
+        [UIView animateWithDuration:0.3f delay:0.2f options:UIViewAnimationOptionCurveLinear animations:^{
+            self.posterHeaderView.alpha = 1.0f;
+        } completion:^(BOOL finished) {
+        }];
         
-        [UIView animateWithDuration:0.5f delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-            self.descriptionView.height = 0.0f;
-            
+        [UIView animateWithDuration:0.4f delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
+            self.descriptionView.alpha = 0.0f;
             self.descriptionView.left = self.width - 80.0f;
-            self.descriptionView.width = 0.0f;
             self.descriptionView.top = self.height - 60.0f;
+            
+            self.seatView.alpha = 1.0f;
             
             self.button.top = self.height - 90.0f;
             self.button.left = self.width - 180.0f;
             self.button.width = 160.0f;
             self.button.titleLabel.text = @"Done";
             self.button.detailLabel.text = @"";
+            
             self.backButton.alpha = 1.0f;
         } completion:^(BOOL finished) {
             [_posterView.layer removeAnimationForKey:@"rotationSecond"];
+            [_seatView.layer removeAnimationForKey:@"scaleSecond"];
         }];
     }
     else
     {
         _backButton.hidden = YES;
         self.descriptionView.width = self.width - 60.0f;
-        [self bringSubviewToFront:self.button];
+        self.posterHeaderView.width = width;
+        self.posterHeaderView.height = 0.0f;
+        self.posterHeaderView.left = 0.0f;
+        self.posterHeaderView.top = 0.0f;
+        self.posterHeaderView.alpha = 0.0f;
         
-        [UIView animateWithDuration:0.2f delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        [_posterView.layer addAnimation:[self rotationAnimationAppear] forKey:@"rotationSecond"];
+        [_seatView.layer addAnimation:[self scaleAnimationBigger] forKey:@"scaleSecond"];
+        
+        [UIView animateWithDuration:0.4f delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
             self.posterView.left = 0.0f;
             self.posterView.top = 0.0f;
             self.posterView.width = width;
             self.posterView.height =  height;
         } completion:^(BOOL finished) {
-            
         }];
         
-        CABasicAnimation* rotationAnimation;
-        rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform"];
-        rotationAnimation.fromValue = [NSValue valueWithCATransform3D:getTransForm3DWithAngle(-M_PI/2.0f)];
-        rotationAnimation.toValue = [NSValue valueWithCATransform3D:getTransForm3DWithAngle_r(0.0f)];
-        rotationAnimation.duration = 0.3f;
-        rotationAnimation.cumulative = YES;
-        rotationAnimation.repeatCount = 1;
-        rotationAnimation.removedOnCompletion=NO;
-        rotationAnimation.fillMode=kCAFillModeForwards;
-        rotationAnimation.autoreverses = NO;
-        [_posterView.layer addAnimation:rotationAnimation forKey:@"rotationSecond"];
-        
-        [UIView animateWithDuration:0.5f animations:^{
-            
+        [UIView animateWithDuration:0.4f delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
+            self.descriptionView.alpha = 1.0f;
             self.button.frame = CGRectMake(30.0f, _posterView.bottom - 20.0f, self.width - 60.0f, 60.0f);
             self.button.titleLabel.text = @"Buy Now";
             self.button.detailLabel.text = @"$29.9";
             
+            self.seatView.alpha = 0.0f;
+            
             self.descriptionView.top = _button.bottom + 10.0f;
             self.descriptionView.left = 30.0f;
-            self.descriptionView.height = self.height - _button.bottom - 50.0f;
+            
             self.backButton.alpha = 0.0f;
         } completion:^(BOOL finished) {
             [_posterView.layer removeAnimationForKey:@"rotationFisrt"];
+            [_seatView.layer removeAnimationForKey:@"scaleFirst"];
         }];
     }
 }
+
+- (CABasicAnimation *)rotationAnimationDisappear
+{
+    CABasicAnimation *rotationAnimation;
+    rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform"];
+    rotationAnimation.fromValue = [NSValue valueWithCATransform3D:getTransForm3DWithAngle_r(0.0f)];
+    rotationAnimation.toValue = [NSValue valueWithCATransform3D:getTransForm3DWithAngle(-radians(89.0f))];
+    rotationAnimation.duration = 0.4f;
+    rotationAnimation.cumulative = YES;
+    rotationAnimation.repeatCount = 1;
+    rotationAnimation.removedOnCompletion=NO;
+    rotationAnimation.fillMode=kCAFillModeForwards;
+    rotationAnimation.autoreverses = NO;
+    rotationAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+    return rotationAnimation;
+}
+
+- (CABasicAnimation *)rotationAnimationAppear
+{
+    CABasicAnimation *rotationAnimation;
+    rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform"];
+    rotationAnimation.fromValue = [NSValue valueWithCATransform3D:getTransForm3DWithAngle(-M_PI/2.0f)];
+    rotationAnimation.toValue = [NSValue valueWithCATransform3D:getTransForm3DWithAngle_r(0.0f)];
+    rotationAnimation.duration = 0.4f;
+    rotationAnimation.cumulative = YES;
+    rotationAnimation.repeatCount = 1;
+    rotationAnimation.removedOnCompletion=NO;
+    rotationAnimation.fillMode=kCAFillModeForwards;
+    rotationAnimation.autoreverses = NO;
+    rotationAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+    return rotationAnimation;
+}
+
+- (CABasicAnimation *)scaleAnimationSmaller
+{
+    CABasicAnimation *rotationAnimation;
+    rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
+    rotationAnimation.fromValue = [NSNumber numberWithFloat:1.3f];
+    rotationAnimation.toValue = [NSNumber numberWithFloat:1.0f];
+    rotationAnimation.duration = 0.4f;
+    rotationAnimation.cumulative = YES;
+    rotationAnimation.repeatCount = 1;
+    rotationAnimation.removedOnCompletion=NO;
+    rotationAnimation.fillMode=kCAFillModeForwards;
+    rotationAnimation.autoreverses = NO;
+    rotationAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+    return rotationAnimation;
+}
+
+- (CABasicAnimation *)scaleAnimationBigger
+{
+    CABasicAnimation *rotationAnimation;
+    rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
+    rotationAnimation.fromValue = [NSNumber numberWithFloat:1.0f];
+    rotationAnimation.toValue = [NSNumber numberWithFloat:1.3f];
+    rotationAnimation.duration = 0.4f;
+    rotationAnimation.cumulative = YES;
+    rotationAnimation.repeatCount = 1;
+    rotationAnimation.removedOnCompletion=NO;
+    rotationAnimation.fillMode=kCAFillModeForwards;
+    rotationAnimation.autoreverses = NO;
+    rotationAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+    return rotationAnimation;
+}
+
 @end
