@@ -63,10 +63,17 @@
         _descriptionView.text = Global_desc;
         [self addSubview:_descriptionView];
         
-        self.backButton = [[UIButton alloc]initWithFrame:CGRectMake(30.0f, self.height - 60.0f, 40.0f, 30.0f)];
-        [_backButton setTitle:@"Back" forState:UIControlStateNormal];
-        _backButton.titleLabel.font = [UIFont systemFontOfSize:12.0f];
-        [_backButton setTitleColor:Global_cinemaBlue forState:UIControlStateNormal];
+        self.backButton = [[UIButton alloc]initWithFrame:CGRectMake(30.0f, self.height - 90.0f, 60.0f, 60.0f)];
+        //[_backButton setTitle:@"Back" forState:UIControlStateNormal];
+        //_backButton.titleLabel.font = [UIFont systemFontOfSize:12.0f];
+        //[_backButton setTitleColor:Global_cinemaBlue forState:UIControlStateNormal];
+        _backButton.contentMode = UIViewContentModeScaleAspectFill;
+        _backButton.layer.shadowOffset = CGSizeMake(0, 10);
+        _backButton.layer.shadowOpacity = 0.5f;
+        _backButton.layer.shadowRadius = 10.0f;
+        _backButton.layer.shadowColor = [UIColor lightGrayColor].CGColor;
+        
+        [_backButton setBackgroundImage:[UIImage imageNamed:@"back"] forState:UIControlStateNormal];
         _backButton.alpha = 0.0f;
         [_backButton addTarget:self action:@selector(cinemaAnimated) forControlEvents:UIControlEventTouchUpInside];
         _backButton.hidden = YES;
@@ -102,21 +109,21 @@
         } completion:^(BOOL finished) {
         }];
         
-        [UIView animateWithDuration:0.3f delay:0.2f options:UIViewAnimationOptionCurveLinear animations:^{
+        [UIView animateWithDuration:0.3f delay:0.2f options:UIViewAnimationOptionCurveEaseInOut animations:^{
             self.posterHeaderView.alpha = 1.0f;
         } completion:^(BOOL finished) {
         }];
         
         [UIView animateWithDuration:0.4f delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
             self.descriptionView.alpha = 0.0f;
-            self.descriptionView.left = self.width - 80.0f;
+            self.descriptionView.left = self.width/3.0f;
             self.descriptionView.top = self.height - 60.0f;
             
             self.seatView.alpha = 1.0f;
             
             self.button.top = self.height - 90.0f;
-            self.button.left = self.width - 180.0f;
-            self.button.width = 160.0f;
+            self.button.left = self.width/3.0f;
+            self.button.width = (self.width/3.0f) * 2.0f - 20.0f;
             self.button.titleLabel.text = @"Done";
             self.button.detailLabel.text = @"";
             
@@ -157,7 +164,6 @@
             
             self.descriptionView.top = _button.bottom + 10.0f;
             self.descriptionView.left = 30.0f;
-            
             self.backButton.alpha = 0.0f;
         } completion:^(BOOL finished) {
             [_posterView.layer removeAnimationForKey:@"rotationFisrt"];
