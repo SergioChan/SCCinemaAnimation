@@ -63,7 +63,7 @@
         _descriptionView.text = Global_desc;
         [self addSubview:_descriptionView];
         
-        self.backButton = [[UIButton alloc]initWithFrame:CGRectMake(30.0f, self.height - 90.0f, 60.0f, 60.0f)];
+        self.backButton = [[UIButton alloc]initWithFrame:CGRectMake(20.0f, self.height - 90.0f, 60.0f, 60.0f)];
         //[_backButton setTitle:@"Back" forState:UIControlStateNormal];
         //_backButton.titleLabel.font = [UIFont systemFontOfSize:12.0f];
         //[_backButton setTitleColor:Global_cinemaBlue forState:UIControlStateNormal];
