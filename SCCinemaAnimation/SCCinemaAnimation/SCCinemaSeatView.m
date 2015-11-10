@@ -29,7 +29,6 @@
             [self addSubview:button];
             count += 1;
             nextX += buttonWidth * 1.25f;
-            NSLog(@"fuck ?:%f,%f",nextX,nextX/buttonWidth);
             if(count == 2 || count == 6)
             {
                 nextX += buttonWidth * 1.25f;
