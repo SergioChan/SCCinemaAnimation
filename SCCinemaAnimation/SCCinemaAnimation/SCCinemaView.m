@@ -48,7 +48,7 @@
         self.button = [[SCCinemaButtonView alloc]initWithFrame:CGRectMake(30.0f, ((self.height / 10.0f ) * 4.0f) - 20.0f, self.width - 60.0f, 60.0f)];
         _button.titleLabel.text = title;
         _button.detailLabel.text = price;
-        
+        //_button.layer.anchorPoint = CGPointMake(0, 0.5);
         __weak SCCinemaView *weakSelf = self;
         _button.DidTapped = ^{
             [weakSelf cinemaAnimated];
@@ -100,14 +100,7 @@
         
         [_posterView.layer addAnimation:[self rotationAnimationDisappear] forKey:@"rotationFisrt"];
         [_seatView.layer addAnimation:[self scaleAnimationSmaller] forKey:@"scaleFirst"];
-        
-        [UIView animateWithDuration:0.4f delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
-            self.posterView.left = 0.05f * width;
-            self.posterView.top = 0.15f * height;
-            self.posterView.width = 0.9f * width;
-            self.posterView.height = 0.7f * height;
-        } completion:^(BOOL finished) {
-        }];
+        //[_button.layer addAnimation:[self BezierMoveAnimation] forKey:@"moveFirst"];
         
         [UIView animateWithDuration:0.3f delay:0.2f options:UIViewAnimationOptionCurveEaseInOut animations:^{
             self.posterHeaderView.alpha = 1.0f;
@@ -115,6 +108,11 @@
         }];
         
         [UIView animateWithDuration:0.4f delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
+            self.posterView.left = 0.05f * width;
+            self.posterView.top = 0.15f * height;
+            self.posterView.width = 0.9f * width;
+            self.posterView.height = 0.7f * height;
+            
             self.descriptionView.alpha = 0.0f;
             self.descriptionView.left = self.width/3.0f;
             self.descriptionView.top = self.height - 60.0f;
@@ -131,6 +129,8 @@
         } completion:^(BOOL finished) {
             [_posterView.layer removeAnimationForKey:@"rotationSecond"];
             [_seatView.layer removeAnimationForKey:@"scaleSecond"];
+            [_button.layer removeAnimationForKey:@"moveSecond"];
+            //self.button.frame = CGRectMake(self.width/3.0f, self.height - 90.0f, (self.width/3.0f) * 2.0f - 20.0f, 60.0f);
         }];
     }
     else
@@ -145,29 +145,32 @@
         
         [_posterView.layer addAnimation:[self rotationAnimationAppear] forKey:@"rotationSecond"];
         [_seatView.layer addAnimation:[self scaleAnimationBigger] forKey:@"scaleSecond"];
+        //[_button.layer addAnimation:[self BezierMoveAnimationBack] forKey:@"moveSecond"];
         
         [UIView animateWithDuration:0.4f delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
             self.posterView.left = 0.0f;
             self.posterView.top = 0.0f;
             self.posterView.width = width;
             self.posterView.height =  height;
-        } completion:^(BOOL finished) {
-        }];
-        
-        [UIView animateWithDuration:0.4f delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
+            
             self.descriptionView.alpha = 1.0f;
-            self.button.frame = CGRectMake(30.0f, _posterView.bottom - 20.0f, self.width - 60.0f, 60.0f);
+
+            self.seatView.alpha = 0.0f;
+            
+            self.button.width = self.width - 60.0f;
+            self.button.top = ((self.height / 10.0f ) * 4.0f) - 20.0f;
+            self.button.left = 30.0f;
             self.button.titleLabel.text = @"Buy Now";
             self.button.detailLabel.text = @"$29.9";
             
-            self.seatView.alpha = 0.0f;
-            
-            self.descriptionView.top = _button.bottom + 10.0f;
+            self.descriptionView.top = _posterView.bottom + 50.0f;
             self.descriptionView.left = 30.0f;
             self.backButton.alpha = 0.0f;
         } completion:^(BOOL finished) {
             [_posterView.layer removeAnimationForKey:@"rotationFisrt"];
             [_seatView.layer removeAnimationForKey:@"scaleFirst"];
+            [_button.layer removeAnimationForKey:@"moveFirst"];
+            //self.button.frame = CGRectMake(30.0f, _posterView.bottom - 20.0f, self.width - 60.0f, 60.0f);
         }];
     }
 }
@@ -206,34 +209,113 @@
 
 - (CABasicAnimation *)scaleAnimationSmaller
 {
-    CABasicAnimation *rotationAnimation;
-    rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
-    rotationAnimation.fromValue = [NSNumber numberWithFloat:1.3f];
-    rotationAnimation.toValue = [NSNumber numberWithFloat:1.0f];
-    rotationAnimation.duration = 0.4f;
-    rotationAnimation.cumulative = YES;
-    rotationAnimation.repeatCount = 1;
-    rotationAnimation.removedOnCompletion=NO;
-    rotationAnimation.fillMode=kCAFillModeForwards;
-    rotationAnimation.autoreverses = NO;
-    rotationAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
-    return rotationAnimation;
+    CABasicAnimation *scaleAnimation;
+    scaleAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
+    scaleAnimation.fromValue = [NSNumber numberWithFloat:1.3f];
+    scaleAnimation.toValue = [NSNumber numberWithFloat:1.0f];
+    scaleAnimation.duration = 0.4f;
+    scaleAnimation.cumulative = YES;
+    scaleAnimation.repeatCount = 1;
+    scaleAnimation.removedOnCompletion=NO;
+    scaleAnimation.fillMode=kCAFillModeForwards;
+    scaleAnimation.autoreverses = NO;
+    scaleAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+    return scaleAnimation;
 }
 
 - (CABasicAnimation *)scaleAnimationBigger
 {
-    CABasicAnimation *rotationAnimation;
-    rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
-    rotationAnimation.fromValue = [NSNumber numberWithFloat:1.0f];
-    rotationAnimation.toValue = [NSNumber numberWithFloat:1.3f];
-    rotationAnimation.duration = 0.4f;
-    rotationAnimation.cumulative = YES;
-    rotationAnimation.repeatCount = 1;
-    rotationAnimation.removedOnCompletion=NO;
-    rotationAnimation.fillMode=kCAFillModeForwards;
-    rotationAnimation.autoreverses = NO;
-    rotationAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
-    return rotationAnimation;
+    CABasicAnimation *scaleAnimation;
+    scaleAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
+    scaleAnimation.fromValue = [NSNumber numberWithFloat:1.0f];
+    scaleAnimation.toValue = [NSNumber numberWithFloat:1.3f];
+    scaleAnimation.duration = 0.4f;
+    scaleAnimation.cumulative = YES;
+    scaleAnimation.repeatCount = 1;
+    scaleAnimation.removedOnCompletion=NO;
+    scaleAnimation.fillMode=kCAFillModeForwards;
+    scaleAnimation.autoreverses = NO;
+    scaleAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+    return scaleAnimation;
 }
 
+- (CAAnimationGroup *)BezierMoveAnimation
+{
+    CABasicAnimation *scaleAnimation;
+    scaleAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale.x"];
+    scaleAnimation.fromValue = [NSNumber numberWithFloat:1.0f];
+    scaleAnimation.toValue = [NSNumber numberWithFloat:1.0f];
+    scaleAnimation.duration = 0.4f;
+    scaleAnimation.cumulative = YES;
+    scaleAnimation.repeatCount = 1;
+    scaleAnimation.removedOnCompletion=NO;
+    scaleAnimation.fillMode=kCAFillModeForwards;
+    scaleAnimation.autoreverses = NO;
+    scaleAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+    
+    CAKeyframeAnimation *animation=[CAKeyframeAnimation animationWithKeyPath:@"position"];
+    animation.duration=0.5f;
+    animation.removedOnCompletion = NO;
+    animation.fillMode = kCAFillModeForwards;
+    animation.repeatCount=1;
+    animation.calculationMode = kCAAnimationCubicPaced;
+    animation.autoreverses = NO;
+
+    CGMutablePathRef curvedPath = CGPathCreateMutable();
+    CGPathMoveToPoint(curvedPath, NULL, self.width/2.0f, ((self.height / 10.0f ) * 4.0f) + 10.0f);
+    CGFloat top = self.height - 60.0f;
+    CGFloat left = (self.width / 3.0f) * 2.0f - 10.0f;
+    CGPathAddQuadCurveToPoint(curvedPath, NULL,self.width/2.0f + 30.0f,self.height/2.0f + 30.0f,left,top);
+    
+    animation.path=curvedPath;
+    CGPathRelease(curvedPath);
+    
+    CAAnimationGroup *group = [CAAnimationGroup animation];
+    group.animations = [NSArray arrayWithObjects:scaleAnimation,animation, nil];
+    group.duration = 0.5f;
+    group.removedOnCompletion = NO;
+    group.autoreverses = NO;
+    group.fillMode = kCAFillModeForwards;
+    return group;
+}
+
+- (CAAnimationGroup *)BezierMoveAnimationBack
+{
+    CABasicAnimation *scaleAnimation;
+    scaleAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale.x"];
+    scaleAnimation.fromValue = [NSNumber numberWithFloat:1.0f];
+    scaleAnimation.toValue = [NSNumber numberWithFloat:1.0f];
+    scaleAnimation.duration = 0.4f;
+    scaleAnimation.cumulative = YES;
+    scaleAnimation.repeatCount = 1;
+    scaleAnimation.removedOnCompletion=NO;
+    scaleAnimation.fillMode=kCAFillModeForwards;
+    scaleAnimation.autoreverses = NO;
+    scaleAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+    
+    CAKeyframeAnimation *animation=[CAKeyframeAnimation animationWithKeyPath:@"position"];
+    animation.duration=0.5f;
+    animation.removedOnCompletion = NO;
+    animation.fillMode = kCAFillModeForwards;
+    animation.repeatCount=1;
+    animation.calculationMode = kCAAnimationCubicPaced;
+    animation.autoreverses = NO;
+    
+    CGMutablePathRef curvedPath = CGPathCreateMutable();
+    CGPathMoveToPoint(curvedPath, NULL, (self.width / 3.0f) * 2.0f - 10.0f,self.height - 60.0f);
+    CGFloat left = self.width/2.0f;
+    CGFloat top = ((self.height / 10.0f ) * 4.0f) + 10.0f;
+    CGPathAddQuadCurveToPoint(curvedPath, NULL,self.width/2.0f + 30.0f,self.height/2.0f + 30.0f,left,top);
+    
+    animation.path=curvedPath;
+    CGPathRelease(curvedPath);
+    
+    CAAnimationGroup *group = [CAAnimationGroup animation];
+    group.animations = [NSArray arrayWithObjects:scaleAnimation,animation, nil];
+    group.duration = 0.5f;
+    group.removedOnCompletion = NO;
+    group.autoreverses = NO;
+    group.fillMode = kCAFillModeForwards;
+    return group;
+}
 @end
