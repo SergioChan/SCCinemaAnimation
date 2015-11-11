@@ -12,7 +12,9 @@
 #import "SCCinemaSeatView.h"
 
 @interface SCCinemaView : UIView
-
+{
+    CGPoint controlPoint;
+}
 @property (nonatomic, strong) UIView *posterView;
 @property (nonatomic, strong) UIView *posterHeaderView;
 

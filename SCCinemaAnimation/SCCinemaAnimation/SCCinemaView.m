@@ -16,6 +16,7 @@
     self = [super initWithFrame:frame];
     if(self)
     {
+        controlPoint = CGPointMake(self.width/2.0f - 50.0f,self.height/2.0f + 30.0f);
         self.backgroundColor = [UIColor whiteColor];
         
         CGFloat seatTop = ((self.height / 10.0f ) * 4.0f) * 0.15f + 80.0f;
@@ -48,7 +49,8 @@
         self.button = [[SCCinemaButtonView alloc]initWithFrame:CGRectMake(30.0f, ((self.height / 10.0f ) * 4.0f) - 20.0f, self.width - 60.0f, 60.0f)];
         _button.titleLabel.text = title;
         _button.detailLabel.text = price;
-        //_button.layer.anchorPoint = CGPointMake(0, 0.5);
+        _button.layer.anchorPoint = CGPointMake(0, 0.5);
+        _button.layer.position = CGPointMake(30.0f, _button.layer.position.y);
         __weak SCCinemaView *weakSelf = self;
         _button.DidTapped = ^{
             [weakSelf cinemaAnimated];
@@ -100,7 +102,7 @@
         
         [_posterView.layer addAnimation:[self rotationAnimationDisappear] forKey:@"rotationFisrt"];
         [_seatView.layer addAnimation:[self scaleAnimationSmaller] forKey:@"scaleFirst"];
-        //[_button.layer addAnimation:[self BezierMoveAnimation] forKey:@"moveFirst"];
+        [_button.layer addAnimation:[self BezierMoveAnimation] forKey:@"moveFirst"];
         
         [UIView animateWithDuration:0.3f delay:0.2f options:UIViewAnimationOptionCurveEaseInOut animations:^{
             self.posterHeaderView.alpha = 1.0f;
@@ -119,8 +121,8 @@
             
             self.seatView.alpha = 1.0f;
             
-            self.button.top = self.height - 90.0f;
-            self.button.left = self.width/3.0f;
+            //self.button.top = self.height - 90.0f;
+            //self.button.left = self.width/3.0f;
             self.button.width = (self.width/3.0f) * 2.0f - 20.0f;
             self.button.titleLabel.text = @"Done";
             self.button.detailLabel.text = @"";
@@ -130,7 +132,7 @@
             [_posterView.layer removeAnimationForKey:@"rotationSecond"];
             [_seatView.layer removeAnimationForKey:@"scaleSecond"];
             [_button.layer removeAnimationForKey:@"moveSecond"];
-            //self.button.frame = CGRectMake(self.width/3.0f, self.height - 90.0f, (self.width/3.0f) * 2.0f - 20.0f, 60.0f);
+            self.button.frame = CGRectMake(self.width/3.0f, self.height - 90.0f, (self.width/3.0f) * 2.0f - 20.0f, 60.0f);
         }];
     }
     else
@@ -145,7 +147,7 @@
         
         [_posterView.layer addAnimation:[self rotationAnimationAppear] forKey:@"rotationSecond"];
         [_seatView.layer addAnimation:[self scaleAnimationBigger] forKey:@"scaleSecond"];
-        //[_button.layer addAnimation:[self BezierMoveAnimationBack] forKey:@"moveSecond"];
+        [_button.layer addAnimation:[self BezierMoveAnimationBack] forKey:@"moveSecond"];
         
         [UIView animateWithDuration:0.4f delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
             self.posterView.left = 0.0f;
@@ -158,8 +160,8 @@
             self.seatView.alpha = 0.0f;
             
             self.button.width = self.width - 60.0f;
-            self.button.top = ((self.height / 10.0f ) * 4.0f) - 20.0f;
-            self.button.left = 30.0f;
+            //self.button.top = ((self.height / 10.0f ) * 4.0f) - 20.0f;
+            //self.button.left = 30.0f;
             self.button.titleLabel.text = @"Buy Now";
             self.button.detailLabel.text = @"$29.9";
             
@@ -170,7 +172,7 @@
             [_posterView.layer removeAnimationForKey:@"rotationFisrt"];
             [_seatView.layer removeAnimationForKey:@"scaleFirst"];
             [_button.layer removeAnimationForKey:@"moveFirst"];
-            //self.button.frame = CGRectMake(30.0f, _posterView.bottom - 20.0f, self.width - 60.0f, 60.0f);
+            self.button.frame = CGRectMake(30.0f, _posterView.bottom - 20.0f, self.width - 60.0f, 60.0f);
         }];
     }
 }
@@ -245,7 +247,7 @@
     scaleAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale.x"];
     scaleAnimation.fromValue = [NSNumber numberWithFloat:1.0f];
     scaleAnimation.toValue = [NSNumber numberWithFloat:1.0f];
-    scaleAnimation.duration = 0.4f;
+    scaleAnimation.duration = 0.5f;
     scaleAnimation.cumulative = YES;
     scaleAnimation.repeatCount = 1;
     scaleAnimation.removedOnCompletion=NO;
@@ -260,12 +262,16 @@
     animation.repeatCount=1;
     animation.calculationMode = kCAAnimationCubicPaced;
     animation.autoreverses = NO;
-
+    animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+    
     CGMutablePathRef curvedPath = CGPathCreateMutable();
-    CGPathMoveToPoint(curvedPath, NULL, self.width/2.0f, ((self.height / 10.0f ) * 4.0f) + 10.0f);
+    //CGPathMoveToPoint(curvedPath, NULL, self.width/2.0f, ((self.height / 10.0f ) * 4.0f) + 10.0f);
+    CGPathMoveToPoint(curvedPath, NULL, 30.0f, ((self.height / 10.0f ) * 4.0f) + 10.0f);
+    
+    CGFloat left = self.width/3.0f;//(self.width / 3.0f) * 2.0f - 10.0f;
     CGFloat top = self.height - 60.0f;
-    CGFloat left = (self.width / 3.0f) * 2.0f - 10.0f;
-    CGPathAddQuadCurveToPoint(curvedPath, NULL,self.width/2.0f + 30.0f,self.height/2.0f + 30.0f,left,top);
+    
+    CGPathAddQuadCurveToPoint(curvedPath, NULL,controlPoint.x,controlPoint.y,left,top);
     
     animation.path=curvedPath;
     CGPathRelease(curvedPath);
@@ -285,7 +291,7 @@
     scaleAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale.x"];
     scaleAnimation.fromValue = [NSNumber numberWithFloat:1.0f];
     scaleAnimation.toValue = [NSNumber numberWithFloat:1.0f];
-    scaleAnimation.duration = 0.4f;
+    scaleAnimation.duration = 0.5f;
     scaleAnimation.cumulative = YES;
     scaleAnimation.repeatCount = 1;
     scaleAnimation.removedOnCompletion=NO;
@@ -300,12 +306,16 @@
     animation.repeatCount=1;
     animation.calculationMode = kCAAnimationCubicPaced;
     animation.autoreverses = NO;
+    animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
     
     CGMutablePathRef curvedPath = CGPathCreateMutable();
-    CGPathMoveToPoint(curvedPath, NULL, (self.width / 3.0f) * 2.0f - 10.0f,self.height - 60.0f);
-    CGFloat left = self.width/2.0f;
+    //CGPathMoveToPoint(curvedPath, NULL, (self.width / 3.0f) * 2.0f - 10.0f,self.height - 60.0f);
+    CGPathMoveToPoint(curvedPath, NULL, self.width/3.0f, self.height - 60.0f);
+    
+    CGFloat left = 30.0f;//self.width/2.0f;
     CGFloat top = ((self.height / 10.0f ) * 4.0f) + 10.0f;
-    CGPathAddQuadCurveToPoint(curvedPath, NULL,self.width/2.0f + 30.0f,self.height/2.0f + 30.0f,left,top);
+    
+    CGPathAddQuadCurveToPoint(curvedPath, NULL,controlPoint.x,controlPoint.y,left,top);
     
     animation.path=curvedPath;
     CGPathRelease(curvedPath);
