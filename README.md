@@ -3,6 +3,8 @@ An iOS native implementation of a Cinema Animation Application. See more at http
 
 iOS上电影购票的动效实现。微博上看到@壹了人拾做的设计，实现了一个demo。
 
+> *最新的安卓实现已经由[DavidWang](https://github.com/DavidWangTM)完成：[DWCinemaAnimation](https://github.com/DavidWangTM/DWCinemaAnimation-Android)*
+
 ## Preview
 
 ![image](https://raw.githubusercontent.com/SergioChan/SCCinemaAnimation/master/Image/preview.png)
